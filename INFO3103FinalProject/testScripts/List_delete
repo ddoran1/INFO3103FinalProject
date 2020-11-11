@@ -1,0 +1,6 @@
+#!/bin/bash
+#grabs userID, listID, taskID
+read -p "userID: " userID
+read -p "listID: " listID
+read -p "Port: " port
+curl -i -H "Content-Type: application/json" -X DELETE -d '{"listID": "'$listID'", "userID": "'$userID'"}' -b cookie-jar -k https://info3103.cs.unb.ca:$port/users/$userID/lists/$listID

@@ -1,0 +1,10 @@
+#!/bin/bash
+#gets userID, listID, task
+
+read -p "userID: " userID
+read -p "listID: " listID
+read -p "taskID: " taskID
+read -p "taskIn: " taskIn
+read -p "complete? (0 or 1): " bool
+read -p "Port: " port
+curl -i -H "Content-Type: application/json" -X PUT -d '{"userID": "'$userID'", "listID": "'$listID'", "taskID": "'$taskID'", "taskIn": "'"$taskIn"'", "bool": "'$bool'"}' -b cookie-jar -k https://info3103.cs.unb.ca:$port/users/$userID/lists/$listID/tasks/$taskID

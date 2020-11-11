@@ -1,0 +1,523 @@
+#%RAML 1.0
+title: ToDoList
+baseUri: https://info3103.cs.unb.ca/mmacdo29/finalProject
+version: 1.0
+types:
+  User:
+    type: object
+    properties:
+      userID: string
+      fName: string
+      lName: string
+      email: string
+  List:
+    type: object
+    properties:
+      userID: string
+      listID: integer
+      title: string
+      description: string
+  Task:
+    type: object
+    properties:
+      listID: integer
+      taskID: integer
+      description: string
+      completed: boolean
+/:
+  description: The page!
+  get:
+    description: returns the page!
+  /signup:
+    description: The sign up page for new uers
+    post:
+      description: signing up
+      responses:
+        200:
+          body:
+            application/json:
+              description: Returns message stating you're logged in.
+              example: |
+                {
+                  "status": "user already logged in"
+                }
+        201:
+          body:
+            application/json:
+              description: Returns the uri of the new user
+              example: |
+                {
+                  "uri": "https://info3103.cs.unb.ca:60513/users/1"
+                }
+        403:
+          body:
+            application/json:
+              description: LDAP exception occurred
+              example: |
+                {
+                  "status": "Access denied"
+                }
+        400:
+          body:
+            application/json:
+              description: User already exists in User table
+              example: |
+                {
+                  "status" : "User already exists"
+                }
+        500:
+          body:
+            application/json:
+              example: |
+                {
+                  "status" : "failure"
+                }
+  /signin:
+    description: The signin page for returning users.
+    delete:
+      description: deleting your session. "Logging out".
+      queryParameters:
+        access_token:
+          displayName: UserID
+          type: string
+          description: If the user doesn't have the right token, they are redirected to users/{userID}/lists
+          required: true
+      responses:
+        200:
+          body:
+            application/json:
+              description: Successfully logged out
+              example: |
+                {
+                  "status": "success"
+                }
+        401:
+          body:
+            application/json:
+              description: User was not logged in and is attempting to log otu
+              example: |
+                {
+                  "status": "failure"
+                }
+    post:
+      description: Where you go to login
+      queryParameters:
+        access_token:
+          displayName: UserID
+          type: string
+          description: If the user doesn't have the right token, they are redirected to users/{userID}/lists
+          required: true
+      responses:
+        200:
+          body:
+            application/json:
+              description: When a user is already logged in
+              example:
+                {
+                  "status": "success"
+                }
+        201:
+          body:
+            application/json:
+              description: when a user logs and already exists
+              example: |
+                {
+                  "uri": "https://info3103.cs.unb.ca:60513/users/1"
+                }
+        400:
+          body:
+            application/json:
+              description: If a user doesn't already exist
+              example: |
+                {
+                  "status": "user already exists"
+                }
+        403:
+          body:
+            application/json:
+              description: When LDAP exception occurs
+              example: |
+                {
+                  "status": "access denied"
+                }
+        500:
+          body:
+            application/json:
+              example: |
+                {
+                  "status": "Fail"
+                }
+    get:
+      description: Returning whether the user has a session
+      responses:
+        200:
+          body:
+            application/json:
+              description: When a user has logged in
+              example: |
+                {
+                  "status": "success"
+                }
+        403:
+          body:
+            application/json:
+              description: When a user is not logged in
+              example: |
+                {
+                  "status": "fail"
+                }
+  /users:
+   description: Collection of all users that have accounts
+   get:
+    description: Returns  a list of users that have accounts, or any user that matches the query parameters
+    queryParameters:
+      UserName:
+        type: string
+        required: false
+        description: The user
+        example: "mmacdo29"
+      Email:
+        type: string
+        required: false
+        description: user's email
+        example: "mmacdo29@unb.ca"
+    responses:
+      200:
+        body:
+          application/json:
+            example: |
+              {
+              "users":
+                [
+                 {
+                 "UserID": "mmacdo29",
+                 "fName": "Nicolas",
+                 "lName": "MacDonald",
+                 "email": "mmacdo29@unb.ca"
+                 },
+                 {
+                 "UserID": "ddoran1",
+                 "fName": "David",
+                 "lName": "Doran",
+                 "email": "ddoran1@unb.ca"
+                 }
+                ]
+               }
+      500:
+        body:
+          application/json:
+            example: |
+              {"message": "500 Server err - try again"}
+   post:
+     description: Adds a new user to the list of users
+     queryParameters:
+       access_token:
+         displayName: UserID
+         type: string
+         description: If the user doesn't have the right token, they are redirected to users/{userID}/lists
+         required: true
+     responses:
+       201:
+         body:
+           application/json:
+             example: |
+               {
+               "UserID": "newUser1",
+               "fName": "Travis",
+               "lName": "McElroy",
+               "email": "mbmbam@maximumfun.org"
+               }
+       409:
+         body:
+           applciation/json:
+             example: |
+               {"message": "409 Conflict - Username taken"}
+       500:
+         body:
+           application/json:
+             example: |
+               {"message": "500 try again"}
+   /{userID}:
+    description: The specific user and any information pertaining to them, aside from their lists
+    get:
+      description: Returns information about the user on hand
+      queryParameters:
+        access_token:
+          displayName: UserID
+          type: string
+          description: If the user doesn't have the right token, they are redirected to users/{userID}/lists
+          required: true
+      responses:
+        200:
+          body:
+            application/json:
+              example: |
+                {
+                "UserID": "mmacdo29",
+                "fName": "Nicolas",
+                "lName": "MacDonald",
+                "email": "mmacdo29"
+                }
+        404:
+          body:
+            application/json:
+              example: |
+                {"message": "404 File not found"}
+    put:
+     description: Updates information on hand for the specific user.
+     queryParameters:
+       access_token:
+         displayName: UserID
+         type: string
+         description: Can't update a different user.
+         required: true
+     responses:
+       203:
+           body:
+             application/json:
+               example: |
+                {
+                 "UserID": "nmacdo29",
+                 "fName": "Nicolas",
+                 "lName": "MacDonald",
+                 "email": "mmacdo29"
+                }
+       401:
+         body:
+           application/json:
+             example: |
+               {"message": "401 Not authorized"}
+       500:
+         body:
+           application/json:
+             example: |
+               {"message": "500 try again"}
+    delete:
+      description: Deletes the specified user, if they are themselves.
+      queryParameters:
+        access_token:
+          displayName: UserID
+          type: string
+          description: Can't delete another user.
+          required: true
+      responses:
+        200:
+          body:
+            application/json:
+              example: |
+                {"message": "User successfully deleted"}
+        401:
+          body:
+            application/json:
+              example: |
+                {"message": "401 Not authorized"}
+    /lists:
+      description: A collection of lists that this particular user has made.
+      get:
+        description: Returns a collection of lists that coincide with the UserID
+        queryParameters:
+          ListName:
+            type: string
+            required: false
+            example: "Car buying checklist"
+          ListID:
+            type: integer
+            required: false
+            example: 2
+          ListDescriptor:
+            type: string
+            required: false
+            example: "What I need to do before I can buy a car"
+        responses:
+          200:
+            body:
+              application/json:
+               example: |
+                 {
+                 "lists":
+                   [
+                   {
+                   "ListID": 1,
+                   "Title": "Final Project",
+                   "UserID": "nmacdo29"
+                   },
+                   {
+                   "ListID": 2,
+                   "Title": "Building House",
+                   "UserID": "nmacdo29"
+                   }
+                   ]
+                   }
+          404:
+            body:
+              application/json:
+                example: |
+                  {"message": "404 File not found"}
+          500:
+            body:
+              application/json:
+                example: |
+                  {"message": "500 try again"}
+      post:
+        description: Adds another list for the user, if it is the correct user
+        queryParameters:
+          access_token:
+            displayName: UserID
+            type: string
+            description: A user can only build a new list for themselves.
+            required: true
+        responses:
+          201:
+              body:
+                application/json:
+                  example: |
+                    {
+                    "ListID": "2",
+                    "Title": "Building Home",
+                    "UserID": "nmacdo29"
+                    }
+          401:
+            body:
+              application/json:
+                example: |
+                  {"message": "401 Not authorized"}
+      /{listID}:
+        description: The list of tasks that correspond to listID
+        get:
+          description: Returns the tasks associated with listID.
+          queryParameters:
+            TaskName:
+              type: string
+              required: false
+              example: "Car buying checklist"
+            TaskDescription:
+              type: string
+              required: false
+              example: "to buy car"
+            TaskID:
+              type: integer
+              required: false
+              example: 2
+            TaskComplete:
+              type: boolean
+              required: false
+            access_token:
+              displayName: UserID
+              type: string
+              description: If the user doesn't have the right token, they are redirected to users/{userID}/lists
+              required: true
+          responses:
+            200:
+              body:
+                application/json:
+                  example: |
+                    {
+                    "list": [
+                    {
+                    "taskID": 1,
+                    "task": "Call babysitter",
+                    "completed": "false"
+                    },
+                    {
+                    "taskID": 2,
+                    "task": "Deposit cheque",
+                    "completed": "true"
+                    },
+                    {
+                    "taskID": 3,
+                    "task": "Pay babysitter",
+                    "completed": "false"
+                    }
+                    ]
+                    }
+            404:
+              body:
+                application/json:
+                  example: |
+                    {"message": "404: File not found"}
+            500:
+               body:
+                 application/json:
+                   example: |
+                     {"message": "500: try again"}
+        post:
+          description: Adds a new task to the list.
+          queryParameters:
+            access_token:
+              displayName: UserID
+              type: integer
+              description: Can only add to list if you're the proper owner.
+              required: true
+          responses:
+            201:
+              body:
+                application/json:
+                  example: |
+                    {"list": "ListID"}
+            401:
+              body:
+                application/json:
+                  example: |
+                    {"message": "401: Not authorized"}
+            404:
+              body:
+                application/json:
+                  example: |
+                    {"message": "404: File not found"}
+            500:
+              body:
+                application/json:
+                  example: |
+                    {"message": "500: try again"}
+        delete:
+          description: Deletes a list.
+          queryParameters:
+            access_token:
+              displayName: UserID
+              type: string
+              description: Cant delete a list that isnt yours
+              required: true
+          responses:
+            201:
+              body:
+                application/json:
+                  example: |
+                    {"message": "List successfully deleted"}
+            401:
+              body:
+                application/json:
+                  example: |
+                    {"message": "401 Not authorized"}
+            503:
+              body:
+                application/json:
+                  example: |
+                    {"message": "503 Service not currently available"}
+        put:
+          description: updates a task in the list to reflect its doneness, edit the task, etc
+          queryParameters:
+            access_token:
+              displayName: UserID
+              type: string
+              description: Cant modify unless its your list.
+              required: true
+          responses:
+            201:
+              body:
+                application/json:
+                  example: |
+                    {
+                    "TaskID": "2",
+                    "TaskDesc": "Call the babysitter",
+                    "Completed": "false"
+                    }
+            401:
+              body:
+                application/json:
+                  example: |
+                    {"message": "401 Not authorized"}
+            404:
+              body:
+                application/json:
+                  example: |
+                    {"message": "404 File not found"}

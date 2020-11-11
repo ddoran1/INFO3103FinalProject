@@ -1,0 +1,4 @@
+#!/bin/bash
+read -p "Port: " port
+#GET, retrieves the root page of the list application
+curl -i -H "Content-Type: application/json" -X GET -k https://info3103.cs.unb.ca:$port/

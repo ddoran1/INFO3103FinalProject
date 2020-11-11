@@ -1,0 +1,15 @@
+#!/bin/bash
+
+#GET, gets a list/array of all the lists belonging to one person
+#read -p "UserID: " user_id
+#curl -i -H "Content-Type: application/json" -X GET -d '{"userID":"'$user_id'"}' -k https://info3103.cs.unb.ca:23487/users/$user_id/lists
+
+#POST, creates a new list
+read -p "Title: " title
+read -p "UserID:" user_id
+curl -i -H "Content-Type: application/json" -X POST -d '{"title": "'$title'", "userID":"'$user_id'"}' -c cookie-jar -k https://info3103.cs.unb.ca:23487/users/$user_id/lists
+
+#DELETE, deletes a single list and all items attached to that list
+#read -p "UserID: " user_id
+#read -p "list-ID " list_id
+#curl -i -H "Content-Type: application/json" -X DELETE -d '{"Username": "'$username', "list_id": "'$list_id'"}' -c cookie-jar -k https://info3103.cs.unb.ca:60513/users/$user_id/lists

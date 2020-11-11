@@ -1,0 +1,13 @@
+#!/bin/bash
+# Read username and password
+read -p "username: " username
+read -s -p "password: " password
+
+# substitute into the curl command
+curl -i -H "Content-Type: application/json" -X POST -d '{"Username": "'$username'", "Password": "'$password'"}' -c cookie-jar -k https://info3103.cs.unb.ca:60513/signin
+
+#get
+curl -i -H "Content-Type: application/json" -X GET -b cookie-jar -k https://info3103.cs.unb.ca:60513/signin
+
+#delete
+curl -i -H "Content-Type: application/json" -X DELETE -b cookie-jar -k https://info3103.cs.unb.ca:60513/signin

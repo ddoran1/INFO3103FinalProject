@@ -1,0 +1,8 @@
+#!/bin/bash
+
+#grab username and email
+read -p "Username (Cookie must already exist): " username
+read -p "Email: " email
+
+#curl command
+curl -i -H "Content-Type: application/json" -X POST '{"Username": "'$username'", "Email": "'$email'"}' -c cookie-jar -k https://info3103.cs.unb.ca:60513/user

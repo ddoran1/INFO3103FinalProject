@@ -1,0 +1,10 @@
+#!/bin/bash
+
+#POST, Creates a new list item for a list
+
+read -p "username: " username
+read -p "userID: " userID
+read -p "listID: " listID
+read -p "list name: " lstName
+read -p "Description: " descr
+curl -i -H "Content-Type: application/json" -X PUT -d '{"username": "'$username'","userID": "'$userID'", "listID": "'$listID'" ,"lstName": "'"$lstName"'", "description": "'"$descr"'"}' -b cookie-jar -k https://info3103.cs.unb.ca:23487/users/$userID/lists/$listID

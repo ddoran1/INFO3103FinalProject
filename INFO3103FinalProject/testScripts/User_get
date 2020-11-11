@@ -1,0 +1,6 @@
+#!/bin/bash
+#get username
+read -p "UserID: " username
+read -p "Port: " port
+#curl command
+curl -i -H "Content-Type: application/json" -X GET -d '{"userID": "'$username'"}' -k https://info3103.cs.unb.ca:$port/users/$username

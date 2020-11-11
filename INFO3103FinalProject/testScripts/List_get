@@ -1,0 +1,9 @@
+#!/bin/bash
+#gets userID and listID
+
+read -p "userID: " userID
+read -p "listID: " listID
+read -p "port: " port
+
+#curl command
+curl -i -H "Content-Type: application/json" -X GET -d '{"listID": "'$listID'", "userID": "'$userID'"}' -k https://info3103.cs.unb.ca:$port/users/$userID/lists/$listID

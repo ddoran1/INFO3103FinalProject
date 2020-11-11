@@ -1,0 +1,7 @@
+#!/bin/bash
+#gets userID, listID, task
+
+read -p "userID: " userID
+read -p "listID: " listID
+read -p "Port: " port
+curl -i -H "Content-Type: application/json" -X GET -d '{"userID": "'$userID'", "listID": "'$listID'"}' -k https://info3103.cs.unb.ca:$port/users/$userID/lists/$listID/tasks

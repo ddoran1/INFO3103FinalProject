@@ -1,0 +1,4 @@
+read -p "userID: " userID
+read -p "listID: " listID
+read -p "Task Name: " task
+curl -i -H "Content-Type: application/json" -X POST -d '{"userID": "'$userID'" ,"listID": "'$listID'", "task": "'"$task"'"}' -c cookie-jar -k https://info3103.cs.unb.ca:23487/users/$userID/lists/$listID/tasks

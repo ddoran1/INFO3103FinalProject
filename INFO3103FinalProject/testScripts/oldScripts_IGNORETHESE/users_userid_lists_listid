@@ -1,0 +1,22 @@
+#!/bin/bash
+
+#GET, get all the items contained in a particular list
+read -p "userID: " userID
+read -p "listID: " listID
+curl -i -H "Content-Type: application/json" -X GET -d '{"listID": "'$listID'", "userID":"'$userID'"}' -k https://info3103.cs.unb.ca:23487/users/$userID/lists/$listID
+
+#PUT, updates a list item for a for a particular list
+#read -p "item-id: "item_id
+#read -p "name: " name
+#read -p "description: " descr
+#curl -i -H "Content-Type: application/json" -X PUT -d '{"item_id": "'$item_id'" ,"title": "'$title'", "description": "'$descr'"}' -c cookie-jar -k https://info3103.cs.unb.ca:<port>/users/$username/lists/$listID
+
+#POST, Creates a new list item for a list
+#read -p "list name: " lstName
+#read -p "Description: " descr
+#curl -i -H "Content-Type: application/json" -X POST -d '{"list_id": "'$listID'", "lstName": "'$lstName'", "description": "'$descr'"}' -c cookie-jar -k https://info3103.cs.unb.ca:<port>/users/$username/lists/$listID
+
+#DELETE, removes a list item from a list
+#read -p "Title: " title
+#read -p "Description: " descr
+#curl -i -H "Content-Type: application/json" -X DELETE -d '{"list_id": "'$listID'", "lstName": "'$lstName'", "description": "'$descr'"}' -c cookie-jar -k https://info3103.cs.unb.ca:<port>/users/$username/lists/$listID

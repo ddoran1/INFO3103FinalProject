@@ -1,0 +1,5 @@
+#!/bin/bash
+
+#curl command
+read -p "Port: " port
+curl -i -H "Content-Type application/json" -X GET -b cookie-jar -k https://info3103.cs.unb.ca:$port/signin

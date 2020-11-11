@@ -1,0 +1,9 @@
+#!/bin/bash
+
+#POST: creating a new user for the application
+read -p "Enter username (need to already have a cookie) " username
+read -p "Enter email: " email
+curl -i -H "Content-Type: application/json" -X POST -d '{"Username": "'$username'", "Email": "'$email'"}' -c cookie-jar -k https://info3103.cs.unb.ca:60513/users
+
+#GET: get a list of all users in the application, does not require a session
+curl -i -H "Content-Type: application/json" -X GET -k https://info3103.cs.unb.ca:60513/users

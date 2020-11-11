@@ -1,0 +1,10 @@
+DELIMITER //
+DROP PROCEDURE IF EXISTS searchUsers //
+
+CREATE PROCEDURE searchUsers(IN usID VARCHAR(64))
+begin
+	SELECT * FROM Users
+	WHERE LOCATE(usID, UserName);
+end//
+
+DELIMITER ;

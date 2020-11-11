@@ -1,0 +1,296 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width">
+		  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+		<title> ddoran1 and mmacdo29's info3103 final project</title>
+		<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+		<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+		<style>
+			h1 {
+				margin-left: 80px;
+			}
+			small {
+				margin-left: 120px;
+			}
+			h3{
+				margin-left: 10px;
+			}
+		</style>
+	</head>
+
+	<body>
+
+		<div class="jumbotron" id="CheckerHeader">
+				<h1 >Checker</h1>
+				<small>A Website to keep you on top of things.</small></br>
+				<small>Nicolas MacDonald - 3560513</small></br>
+				<small>David Doran - </small></br>
+		</div>
+
+	<nav class="navbar navbar-default">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="#CheckerHeader">Checker</a>
+			</div>
+			<ul class="nav navbar-nav">
+				<li class="active"><a href="#usersContainer">Users</a></li>
+				<li class="active"><a href="#ListsContainer">Lists</a></li>
+				<li class="active"><a href="#ListContainer">View a list</a></li>
+			</ul>
+		</div>
+	</nav>
+
+
+
+
+
+
+		<div id="app">
+			<div id="app" class="container">
+    		<div class="login-wrapper border border-light ">
+
+					<div v-if='authenticated === false'>
+						<table class="table-bordered"><tr>
+							<th><h3>Sign In</h3></th>
+							<th><h3>Sign Up</h3></th>
+						</tr>
+        		<th>
+							<form style=" padding: 15px; margin: 0 auto;" @submit.prevent="signInPost(username, password)">
+							<input id = "username" size="15" v-model="username" type="text" placeholder="username" class="form-control" required autofocus/><br/>
+            	<input id = "password" size="15" v-model="password" type="password" placeholder="password" class="form-control" required/><br/>
+            	<button id="loginButton" class="btn btn-lg btn-primary" type="submit" v-on:click="signInPost(username.value, password.value)">Login</button>
+						</form>
+					</th>
+					</div>
+				</div>
+
+					<th>
+							<form style=" padding: 15px; margin: 0 auto;" @submit.prevent="signInPost(userName, password, email)">
+
+								<input id = "newUser" size="15"  type="text" placeholder="username" class="form-control" required autofocus/><br/>
+								<input id = "newpword" size="15" type="password" placeholder="password" class="form-control" required/><br/>
+								<input id = "email" size="15" type="text" placeholder="email" class="form-control" required/><br/>
+								<button id="signUpButton" class="btn btn-lg btn-primary" type="submit" v-on:click="signUpPost(newUser.value, newpword.value, email.value)">Submit</button>
+							</form>
+						</th>
+						</div>
+					</div>
+				</tr></table>
+				</div>
+
+     			<div v-if='authenticated === true'>
+						<form style="; padding: 15px; margin: 0 auto;" @submit.prevent="signInDelete()">
+       			<button id="logoutButton" class="btn btn-md btn-primary"
+						 type="submit" v-on:click="signInDelete()">Logout</button>
+</br>
+						<div class="container" id="usersContainer">
+
+
+
+
+							<div class="panel panel-default">
+								<div class="panel-heading">Users:</div>
+								<div class="panel-body">
+
+								<button id="getUsers" class="btn btn-sm btn-primary" type="button" v-on:click="usersGet()">Get Users</button>
+						<table class = "table table-responsive table-striped">
+						<ul id="app">
+								<tr v-for="user in users">
+										<th>{{user.UserID}}</th>
+										<th>{{user.UserName}}</th>
+										<th>{{user.email}}</th><br>
+									</tr>
+
+								</thread>
+					</table>
+					<button id="deleteUser" class="btn btn-sm btn-primary" type="button" v-on:click="userDelete()">Delete user</button>
+					</div>
+				</div>
+			</div>
+
+
+		<div class="container" id="ListsContainer">
+			<div class="panel panel-default">
+				<div class="panel-heading">Lists:</div>
+				<div class="panel-body">
+
+
+
+					<h1>Lists</h1></br>
+						<p>Enter user id (to navigate): </p>
+						<input type="text" id="usID" placeholder="User ID" required></input><button id="listsGet" class="btn btn-primary" type="button" v-on:click="listsGet(usID.value)">Go!</button></br>
+
+						<p>Add another list: </p></br>
+						<table type="table-responsive">
+							<tr>
+								<th><input type="text" id="listName" placeholder="name of list" required></input></th>
+								<th><button id="listsPost" class="btn btn-sm btn-primary" type="button" v-on:click="listsPost(listName.value, listDesc.value)">Post List</button></th>
+							</tr>
+							<tr>
+								<th><input type="text" id="listDesc" placeholder="list description"></input></th>
+							</tr>
+
+						</tr>
+					</table>
+
+						<div id="app" class="container">
+							<table id="app" class="table-responsive table-striped">
+								<tr v-for="list in lists">
+										<th>{{list.ListID}}<p>. </p></th>
+										<th>{{list.Title}}</th>
+										<th>{{list.Description}}</th></br>
+									</br>
+								</tr>
+							</ul>
+						</table>
+
+							<h2>Need to edit or delete something?</h2>
+							<table type="table-responsive">
+								<tr>
+									<th>To Delete:</th>
+								</tr>
+								<tr>
+									<th><input type="text" id= "listUID" placeholder = 'UserID of list' required=true></input></th>
+									<th><button id="deleteList" class="btn btn-sm btn-primary" type="button" v-on:click="listDelete()">Delete list</button></th>
+								</tr>
+								<tr>
+									<th><input type="text" id= "listLID" placeholder = 'List ID' required=true></input></th>
+								</tr>
+								<tr>
+									<th>To Edit (Leave empty if you do not wish to update a field):</th>
+								<tr>
+									<th><input type="text" id="listNewName" placeholder="Change title"></input></th>
+									<th><button id="listPut" class="btn btn-primary btn-sm" type="button" v-on:click="listPut()">Edit list</button></th>
+								</tr>
+								<tr>
+									<th><input type="text" id="listNewDesc" placeholder="Change description"></input></th>
+								</tr>
+							</table>
+
+
+						</div>
+
+
+					</div>
+				</div>
+			</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			<div class="container" id="ListContainer">
+			<div class="panel panel-default">
+				<div class="panel-heading">Full List:</div>
+				<div class="panel-body">
+
+
+						<h1>Specific List:</h1></br>
+
+						<input type="text" id="useridagain" placeholder="User ID" required></input>
+						<input type="text" id="liID" placeholder="List ID" required></input>
+						<button id="listGet" class="btn btn-sm btn-primary  " type="button" v-on:click="listGet(useridagain.value, liID.value)">Go!</button></br>
+						<th>{{list.Title}}</th></br>
+						<th>{{list.Description}}</th></br>
+					</br>
+
+						<div v-if = 'listBool === true'>
+
+							<div v-if = 'listUID === userID'>
+								<div id="app">
+									<table class = "table table-responsive">
+										<ul id="app">
+											<tr v-for="task in tasks">
+												<th><button id="taskDel" class="btn btn-sm btn-primary  " type="button" v-on:click="taskDelete(task.TaskID)">Delete task</button></th>
+												<th v-if="task.Complete==true"><input type="checkbox" class="taskDone" v-on:click="taskPut(task.TaskID, '', false)" checked></input></th>
+												<th v-if="task.Complete==false"><input type="checkbox" class="taskDone" v-on:click="taskPut(task.TaskID, '', true)"></input></th>
+												<th>{{task.Task}}</th></br>
+												<input type="text" id="taskPutTitle" placeholder="Change task name"></input></br>
+												<button id="taskPut" class="btn btn-sm btn-primary  " type="button" v-on:click="taskPut(task.TaskID, taskPutTitle.value, task.Complete)">Edit task</button>
+												<button id="taskDel" class="btn btn-sm btn-primary  " type="button" v-on:click="taskDelete(task.TaskID)">Delete task</button></br>
+											</tr>
+										</ul>
+										<p>Add a task?</p></br>
+										<th><input type="text" id="taskInfoIn" placeholder="Task"></input></th>
+										<th><button id="postTask" class="btn btn-sm btn-primary  " type="button" v-on:click="tasksPost(taskInfoIn.value)">Add Task</button></th>
+									</table>
+								</div>
+
+							</div>
+							<div v-if = 'listUID !== userID'>
+							<div id="app">
+								<table class = "table table-responsive">
+									<ul id="app">
+										<tr v-for="task in tasks">
+											<th v-if="task.Complete==true"><input type="checkbox" disabled = "disabled" class="taskDone" checked></input></th>
+											<th v-if="task.Complete==false"><input type="checkbox" disabled = "disabled" class="taskDone"></input></th>
+											<th>{{task.Task}}</th></br>
+										</tr>
+									</ul>
+								</table>
+							</div>
+						</div>
+					</div>
+					<!--
+						<p>Add a task?</p></br>
+						<table type="table-responsive">
+							<tr>
+								<th><input type="text" id="taskName" placeholder="New task's name"></input></th>
+							</tr>
+							<tr>
+								<th><input type="text" id="taskListID" placeholder="What list# does it belong to?"></input></th>
+								<th><button id="getTasks" class="btn btn-sm btn-primary  " type="button" v-on:click="tasksGet(taskUserID.value, taskListID.value)">Get Tasks</button></th>
+								<th><button id="postTask" class="btn btn-sm btn-primary  " type="button" v-on:click="tasksPost()">Add Task</button></th>
+							</tr>
+							<tr>
+								<th><input type="text" id="taskUserID" placeholder="What User ID does it belong to?"></input></th>
+							</tr>
+
+						</table>
+
+						<div id="app">
+							<table class = "table table-responsive">
+							<ul id="app">
+								<tr v-for="task in tasks">
+									<th v-if="task.Complete==true"><input type="checkbox" class="taskDone" v-on:click="taskPut()" checked></input></th>
+									<th v-if="task.Complete==false"><input type="checkbox" class="taskDone" v-on:click="taskPut()"></input></th>
+									<th>{{task.Task}}</th></br>
+										<input type="text" id="taskPutTitle" placeholder="Change task name"></input></br>
+										<button id="taskPut" class="btn btn-sm btn-primary  " type="button" v-on:click="taskPut()">Edit task</button>
+										<button id="taskDel" class="btn btn-sm btn-primary  " type="button" v-on:click="taskDelete()">Delete task</button></br>
+								</tr>
+							</ul>
+						</table>
+						</div>
+
+					-->
+
+					</div>
+			</div>
+</div>
+			</div>
+
+
+
+      		</div>
+
+						</div>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="/static/main.js"></script>
+	</body>
+</html>
